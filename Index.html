@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Employee Management System</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+      .error-message {
+        color: red;
+      }
+      .success-message {
+        color: green;
+      }
+      .employee {
+        border: 1px solid gray;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>New Employees</h1>
+    <div id="status-message"></div>
+    <form id="employee-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required><br><br>
+      <label for="profession">Profession:</label>
+      <input type="text" id="profession" required><br><br>
+      <label for="age">Age:</label>
+      <input type="number" id="age" required><br><br>
+      <button type="submit">Add Employee</button>
+    </form>
+    <h2>Employee List</h2>
+    <div>
+      <strong>Number of Employees:</strong> <span id="num-employees">0</span>
+    </div>
+    <div id="employee-list"></div>
+
+    <script>
+      const employees = [];
+      let nextId = 1;
+
+      function renderEmployees() {
+        const container = document.getElementById('employee-list');
+        container.innerHTML = '';
+        employees.forEach((employee) => {
+          const div = document.createElement('div');
+          div.className = 'employee';
+          div.innerHTML = `
+            <div>ID: ${employee.id}
+            Name: ${employee.name}
+            Profession: ${employee.profession}
+            Age: ${employee.age}</div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      const employeeForm = document.getElementById('employee-form');
+      employeeForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const profession = document.getElementById('profession').value;
+        const age = document.getElementById('age').value;
+        if (!name || !profession || !age) {
+          document.getElementById('status-message').textContent = 'Please fill in all fields.';
+          document.getElementById('status-message').className = 'error-message';
+          return;
+        }
+        const employee = { id: nextId, name, profession, age };
+        employees.push(employee);
+        nextId++;
+        document.getElementById('num-employees').textContent = employees.length;
+        document.getElementById('status-message').textContent = 'Employee added successfully.';
+        document.getElementById('status-message').className = 'success-message';
+        console.log(`Added employee: ${name}, ${profession}, ${age}`);
+        employeeForm.reset();
+        renderEmployees();
+      });
+    </script>
+  </body>
+</html>
